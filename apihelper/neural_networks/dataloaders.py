@@ -35,10 +35,16 @@ class EmbeddingDataset(TorchDataset):
         return self.embeddings[idx],self.labels[idx]
     
 def create_embeddings(model, dataset):
-    embeddings = model.encode(dataset.df["text"].values.tolist(),
-                              batch_size=128,
-                              convert_to_numpy=True,show_progress_bar=True, 
-                              normalize_embeddings=True)
+    try:
+        embeddings = model.encode(dataset.df["text"].values.tolist(),
+                                batch_size=256,
+                                convert_to_numpy=True,show_progress_bar=True, 
+                                normalize_embeddings=True)
+    except:
+        embeddings = model.encode(dataset.df["text"].values.tolist(),
+                                batch_size=64,
+                                convert_to_numpy=True,show_progress_bar=True, 
+                                normalize_embeddings=True)
     # embeddings = embeddings.astype('float16')
     return EmbeddingDataset(embeddings,dataset.df["label"].values)
 
