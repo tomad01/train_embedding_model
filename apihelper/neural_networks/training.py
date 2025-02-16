@@ -128,7 +128,7 @@ def triplet_collate_fn(batch, tokenizer):
 
 # Training function
 def train_body_model(body_model, X_train, X_test, epochs=1,
-                     learning_rate=0.00001, batch_size=32, logs_path=None,optimizer=None):
+                     learning_rate=0.00001, batch_size=32, logs_path=None,optimizer=None,history=None):
     os.makedirs(logs_path, exist_ok=True)
     triplet_collate_fn_with_tokenizer = partial(triplet_collate_fn, tokenizer=body_model.tokenizer)
     # Prepare DataLoaders
@@ -139,17 +139,17 @@ def train_body_model(body_model, X_train, X_test, epochs=1,
     # optimizer = optim.Adam(body_model.parameters(), lr=learning_rate)
     
     # Define Triplet Margin Loss
-    criterion = nn.TripletMarginLoss(margin=0.5, p=2) # try also a margin of 0.5, 1.0
+    criterion = nn.TripletMarginLoss(margin=0.7, p=2) # try also a margin of 0.5, 1.0
     
     device = get_device()
     body_model.to(device)
     # Training loop
     body_model.train()
-    history = {'train_loss': [], 'test_loss': [], 'learning_rate': []}
     # scheduler = optim.lr_scheduler.StepLR(optimizer, step_size=5, gamma=0.1)
+    # history = {'train_loss': [], 'test_loss': [], 'learning_rate': []}
 
     for _ in range(epochs):
-        total_loss = 0.0
+        loss_acum = []  
         for _, (anchor, positive, negative) in tqdm(enumerate(train_loader), total=len(train_loader), desc="Training Body Model"):
             optimizer.zero_grad()
             
@@ -168,16 +168,19 @@ def train_body_model(body_model, X_train, X_test, epochs=1,
             loss.backward()
             optimizer.step()
             
-            # Log the loss
-            total_loss += loss.item()
+        
+            loss_acum.append(loss.item())
+            if len(loss_acum) == 10:
+                loss_avg = sum(loss_acum) / len(loss_acum)
+                loss_acum = []
+                history['train_loss'].append(loss_avg)
         # scheduler.step()
-
-            history['train_loss'].append(loss.item())
         history['learning_rate'].append(optimizer.param_groups[0]['lr'])
 
         # Optionally, evaluate on the test set
         body_model.eval()
-        test_loss = 0.0
+        loss_acum = []
+        
         with torch.no_grad():
             for anchor, positive, negative in test_loader:
                 anchor, positive, negative = anchor.to(device), positive.to(device), negative.to(device)
@@ -186,8 +189,12 @@ def train_body_model(body_model, X_train, X_test, epochs=1,
                 negative_embed = body_model(negative)['sentence_embedding']
                 
                 loss = criterion(anchor_embed, positive_embed, negative_embed)
-                test_loss += loss.item()
-                history['test_loss'].append(loss.item())
+                loss_acum.append(loss.item())
+                if len(loss_acum) == 10:
+                    loss_avg = sum(loss_acum) / len(loss_acum)
+                    loss_acum = []
+                    history['test_loss'].append(loss_avg)
+
         with open(os.path.join(logs_path, "history.json"), "w") as f:
             json.dump(history, f)
 

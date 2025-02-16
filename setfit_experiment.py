@@ -63,6 +63,7 @@ def run_experiment():
         logs_path = f"{save_path}/head_model"
         )
     optimizer = optim.Adam(body_model.parameters(), lr=0.00001)
+    history = {'train_loss': [], 'test_loss': [], 'learning_rate': []}
     for i in range(12):
         del X_test_emb,X_train_emb,head_model
         
@@ -74,7 +75,8 @@ def run_experiment():
             learning_rate = 0.00001,
             batch_size = 32,
             logs_path = f"{save_path}/body_model",
-            optimizer = optimizer
+            optimizer = optimizer,
+            history = history
             )
         
         X_train_emb = create_embeddings(body_model,X_train_original)
