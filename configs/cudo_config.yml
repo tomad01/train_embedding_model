@@ -1,0 +1,62 @@
+# General settings
+task: classification 
+experiment_name: "Rhenus ServiceAffected classification"
+model_type: svm+lightgbm    
+report_file: classification_report.csv
+svm_model_file: svm_model.joblib
+label_encoder_file: label_encoder.joblib
+lightgbm_model_file: lightgbm_model.joblib
+embeddings_type: openai #sentence-transformers  tfidf openai 
+embeddings_model: paraphrase-multilingual-mpnet-base-v2 #paraphrase-multilingual-mpnet-base-v2 #tfidf.joblib 
+
+parsing_parameters:
+  remove_html_tags: False
+  remove_duplicates: False
+  lowercase: False
+  remove_punctuation: True
+  remove_stopwords: False
+  remove_numbers: False
+  limit_length: True
+  max_words: 50
+  min_words: 1
+  max_word_length: 100
+  min_word_length: 1
+
+
+
+data:
+  data_source: json
+  data_path: /root/Rhenus_StartingFrom_20240101_20240701
+  numeric_features: []  
+  augmented_numeric_features: [nr_words,CreatedAt_month,CreatedAt_day,CreatedAt_hour,CreatedAt_weekday]
+  categorical_features: [CreatedByString,AssignedToString,RecipientRoleString,EntryByString,SLAString]
+  embedding_col: embedding
+  description_col: TicketDescription
+  title_col: TicketSummary
+  timestamp_col: CreatedAt
+  timestamp_format: '%Y-%m-%d %H:%M:%S'
+  target_name : ServiceAffected  
+
+# Model parameters
+model_parameters:
+  objective: multiclass  
+  metric: multi_logloss                   # Loss function for multi-class classification
+  learning_rate: 0.01                     # Learning rate (shrinkage)
+  min_child_samples: 10                   # Minimum number of samples in a leaf
+  max_depth: 12                           # Unlimited depth (can overfit)
+  n_estimators: 100                       # Number of base learners
+  feature_fraction: 0.5                   # Percentage of features used per iteration
+  bagging_fraction: 0.6                   # Percentage of data used per iteration
+  bagging_freq: 7                         # Perform bagging every 5 iterations
+  reg_alpha: 0.1                          # L1 regularization term
+  reg_lambda: 2.0                         # L2 regularization term
+  verbose: 1                              # Output level
+
+# Training parameters
+train:
+  num_boost_round: 100                    # Number of boosting iterations
+  early_stopping_round: 10                # Stop training if no improvement in 10 rounds
+  test_size: 0.2
+  min_samples_per_class: 2
+
+  
