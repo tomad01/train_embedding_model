@@ -3,12 +3,10 @@ nltk.download('punkt')
 from nltk.tokenize import word_tokenize
 import pandas as pd
 import numpy as np
-try:
-    from apihelper.config import GlobalConfig
-    from apihelper.openai import Gpt4oWrapper
-    from apihelper.mistral import MistralWrapper
-except:
-    from config import GlobalConfig
+
+from apihelper.config import GlobalConfig
+from apihelper.openai import Gpt4oWrapper
+from apihelper.mistral import MistralWrapper
 from sentence_transformers import SentenceTransformer
 from tqdm import tqdm
 from redis import Redis
@@ -17,22 +15,6 @@ from typing import List
 from openai import AzureOpenAI
 import functools
 
-
-from .config import GlobalConfig
-try:
-    from .openai import Gpt4oWrapper
-    from .mistral import MistralWrapper
-except:
-    pass
-from sentence_transformers import SentenceTransformer
-from tqdm import tqdm
-try:
-    from redis import Redis
-    from rank_bm25 import BM25Okapi
-    from openai import AzureOpenAI
-except:
-    pass
-from typing import List
 
 
 logger = logging.getLogger(__name__)
