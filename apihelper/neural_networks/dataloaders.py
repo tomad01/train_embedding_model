@@ -82,7 +82,7 @@ class CreateOptimizedDataset(TorchDataset):
             # select n samples for anchor class
             anchor = X_train.df[X_train.df.label==row[0][0]].sample(n=n,replace=True)['text'].to_list()
             self.dataset.extend(zip(anchor,pos,neg))
-        logger.info(f"Optimized dataset created with {len(self.dataset)} samples from {len(most_confused_classes)} most confused classes, original dataset size {N}")
+        logger.info(f"Total errors {total_errors} Optimized dataset created with {len(self.dataset)} original dataset size {N}")
 
     def __len__(self):
         return len(self.dataset)
