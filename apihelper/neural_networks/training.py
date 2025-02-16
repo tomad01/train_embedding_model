@@ -172,7 +172,7 @@ def train_body_model(body_model, X_train, X_test, epochs=1,
             total_loss += loss.item()
         # scheduler.step()
 
-        history['train_loss'].append(total_loss / len(train_loader))
+            history['train_loss'].append(loss.item())
         history['learning_rate'].append(optimizer.param_groups[0]['lr'])
 
         # Optionally, evaluate on the test set
@@ -180,13 +180,14 @@ def train_body_model(body_model, X_train, X_test, epochs=1,
         test_loss = 0.0
         with torch.no_grad():
             for anchor, positive, negative in test_loader:
+                anchor, positive, negative = anchor.to(device), positive.to(device), negative.to(device)
                 anchor_embed = body_model(anchor)['sentence_embedding']
                 positive_embed = body_model(positive)['sentence_embedding']
                 negative_embed = body_model(negative)['sentence_embedding']
                 
                 loss = criterion(anchor_embed, positive_embed, negative_embed)
                 test_loss += loss.item()
-        history['test_loss'].append(test_loss / len(test_loader))
+                history['test_loss'].append(loss.item())
         with open(os.path.join(logs_path, "history.json"), "w") as f:
             json.dump(history, f)
 
