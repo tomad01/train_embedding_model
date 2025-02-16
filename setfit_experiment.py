@@ -68,7 +68,8 @@ def run_experiment():
             epochs = 1,
             learning_rate = 0.00001,
             batch_size = 32,
-            logs_path = f"{save_path}/body_model"
+            logs_path = f"{save_path}/body_model",
+            optimizer = optimizer
             )
         
         X_train_emb = create_embeddings(body_model,X_train_original)
