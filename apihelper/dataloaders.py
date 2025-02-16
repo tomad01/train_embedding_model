@@ -2,12 +2,10 @@ import json, os,logging
 from tqdm import tqdm
 import pandas as pd
 import numpy as np
-from redis import Redis
-from apihelper.embeddings_trainer import OpenAIAzureEmbeddings
+
 
 logger = logging.getLogger(__name__)
 
-embedding_model = OpenAIAzureEmbeddings()
 
 def load_test_data(data_source,data_path):
     data = []
@@ -27,6 +25,9 @@ def load_data(data_source,data_path):
 
 
 def load_embeddings(descriptions, titles):
+    from redis import Redis
+    from apihelper.embeddings_trainer import OpenAIAzureEmbeddings
+    embedding_model = OpenAIAzureEmbeddings()
     redis_client = Redis("localhost", 6379, db=5)
     logger.info(f"redis length is {redis_client.dbsize()}")
     embs = []

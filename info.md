@@ -1,7 +1,10 @@
-ssh -i ~/.ssh/cudo root@194.68.244.10
-rsync -avz -e "ssh -i ~/.ssh/cudo" ./dataset.zip root@194.68.244.10:/root/
-conda env export --no-builds | grep -v "prefix" > embeddings_env.yml
-conda env create --name pyml --file=embeddings_env.yml
+ssh -i ~/.ssh/cudo root@194.68.244.13
+rsync -avz -e "ssh -i ~/.ssh/cudo" ./dataset.zip root@194.68.244.13:/root/
+zip -r model.zip model/
+rsync -avz -e "ssh -i ~/.ssh/cudo" root@194.68.244.13:/root/train_embedding_model/model.zip ./
+
+conda env export --no-builds | grep -v "prefix" > environment.yml 
+conda env create --name pyml --file=environment.yml
 
 
 wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
@@ -12,7 +15,7 @@ conda init bash
 
 git config --global user.email "tomadragos96@gmail.com"
 git config --global user.name "Dragos Toma"
-git clone https://github.com/tomad01/image_autoencoder.git
+git clone https://github.com/tomad01/train_embedding_model.git
 
 
 

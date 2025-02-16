@@ -18,10 +18,8 @@ import psutil
 from dotenv import load_dotenv
 load_dotenv("../../.env",override=True)
 from typing import Literal
-try:
-    from .mlops_data_interface import SqliteDataInterface, CosmosDBWrapper
-except:
-    from mlops_data_interface import SqliteDataInterface, CosmosDBWrapper
+from .mlops_data_interface import SqliteDataInterface, CosmosDBWrapper
+
 
 
 try:

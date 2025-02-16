@@ -180,14 +180,17 @@ def train_body_model(body_model, X_train, X_test, epochs=1,
         test_loss = 0.0
         with torch.no_grad():
             for anchor, positive, negative in test_loader:
-                anchor_embed = body_model(anchor)
-                positive_embed = body_model(positive)
-                negative_embed = body_model(negative)
+                anchor_embed = body_model(anchor)['sentence_embedding']
+                positive_embed = body_model(positive)['sentence_embedding']
+                negative_embed = body_model(negative)['sentence_embedding']
                 
                 loss = criterion(anchor_embed, positive_embed, negative_embed)
                 test_loss += loss.item()
         history['test_loss'].append(test_loss / len(test_loader))
         with open(os.path.join(logs_path, "history.json"), "w") as f:
             json.dump(history, f)
+
+        # Save the model
+        torch.save(body_model.state_dict(), os.path.join(logs_path, "body_model.pth"))
             
         return body_model
