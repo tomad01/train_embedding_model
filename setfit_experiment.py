@@ -21,7 +21,7 @@ from sklearn.preprocessing import LabelEncoder
 
 def run_experiment():
     config_file = sys.argv[1]
-    save_path = "/tmp/test"
+    save_path = "./model"
     os.makedirs(save_path, exist_ok=True)
     config = GlobalConfig.from_yaml(config_file)
     current_file_name = os.path.basename(__file__)

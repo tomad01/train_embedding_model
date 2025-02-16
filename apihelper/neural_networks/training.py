@@ -129,7 +129,7 @@ def triplet_collate_fn(batch, tokenizer):
 # Training function
 def train_body_model(body_model, X_train, X_test, epochs=1,
                      learning_rate=0.00001, batch_size=32, logs_path=None):
-    
+    os.makedirs(logs_path, exist_ok=True)
     triplet_collate_fn_with_tokenizer = partial(triplet_collate_fn, tokenizer=body_model.tokenizer)
     # Prepare DataLoaders
     train_loader = DataLoader(X_train, batch_size=batch_size, shuffle=True,collate_fn=triplet_collate_fn_with_tokenizer)

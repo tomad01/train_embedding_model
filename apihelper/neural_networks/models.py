@@ -1,8 +1,12 @@
 from sentence_transformers import SentenceTransformer
 import torch.nn as nn
+import logging
+
+logger = logging.getLogger(__name__)
 
 def load_body_model(model_name):
     model =  SentenceTransformer(model_name)
+    logger.info(f"embedding model with nr of parameters: {sum(p.numel() for p in model.parameters())}")
     return model
 
 class FullyConnectedNN(nn.Module):
