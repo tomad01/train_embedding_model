@@ -40,7 +40,8 @@ def create_embeddings(model, dataset):
                                 batch_size=256,
                                 convert_to_numpy=True,show_progress_bar=True, 
                                 normalize_embeddings=True)
-    except:
+    except Exception as e:
+        logger.error(f"Error in creating embeddings {e}")
         embeddings = model.encode(dataset.df["text"].values.tolist(),
                                 batch_size=64,
                                 convert_to_numpy=True,show_progress_bar=True, 
