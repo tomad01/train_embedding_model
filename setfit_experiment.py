@@ -7,6 +7,7 @@ from apihelper.data_sanitizer import sanitize_data
 from apihelper.train import split_data
 from dotenv import load_dotenv
 from pathlib import Path
+import torch.optim as optim
 
 script_path = Path(__file__).resolve()
 script_dir = script_path.parent
@@ -57,7 +58,7 @@ def run_experiment():
         batch_size = 32,
         logs_path = f"{save_path}/head_model"
         )
-    
+    optimizer = optim.Adam(body_model.parameters(), lr=0.00001)
     for i in range(12):
         del X_test_emb,X_train_emb,head_model
         

@@ -128,7 +128,7 @@ def triplet_collate_fn(batch, tokenizer):
 
 # Training function
 def train_body_model(body_model, X_train, X_test, epochs=1,
-                     learning_rate=0.00001, batch_size=32, logs_path=None):
+                     learning_rate=0.00001, batch_size=32, logs_path=None,optimizer=None):
     os.makedirs(logs_path, exist_ok=True)
     triplet_collate_fn_with_tokenizer = partial(triplet_collate_fn, tokenizer=body_model.tokenizer)
     # Prepare DataLoaders
@@ -136,10 +136,10 @@ def train_body_model(body_model, X_train, X_test, epochs=1,
     test_loader = DataLoader(X_test, batch_size=batch_size, shuffle=False,collate_fn=triplet_collate_fn_with_tokenizer)
     
     # Define optimizer
-    optimizer = optim.Adam(body_model.parameters(), lr=learning_rate)
+    # optimizer = optim.Adam(body_model.parameters(), lr=learning_rate)
     
     # Define Triplet Margin Loss
-    criterion = nn.TripletMarginLoss(margin=1.0, p=2)
+    criterion = nn.TripletMarginLoss(margin=1.0, p=2) # try also a margin of 0.5
     
     device = get_device()
     body_model.to(device)
@@ -192,6 +192,7 @@ def train_body_model(body_model, X_train, X_test, epochs=1,
             json.dump(history, f)
 
         # Save the model
-        torch.save(body_model.state_dict(), os.path.join(logs_path, "body_model.pth"))
+        # torch.save(body_model.state_dict(), os.path.join(logs_path, "body_model.pth"))
+        body_model.save(os.path.join(logs_path, "fine_tuned_body_model"))
             
         return body_model
