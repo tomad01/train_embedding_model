@@ -2,7 +2,7 @@ import logging, os, sys, joblib
 from apihelper.neural_networks.dataloaders import CustomDataset, create_embeddings, CreateOptimizedDataset
 from apihelper.neural_networks.models import load_body_model, FullyConnectedNN
 from apihelper.neural_networks.training import train_head_model, train_body_model
-from apihelper.dataloaders import load_test_data as load_data
+from apihelper.dataloaders import load_test_data, load_data
 from apihelper.data_sanitizer import sanitize_data
 from apihelper.train import split_data
 from dotenv import load_dotenv
@@ -58,7 +58,7 @@ def run_experiment():
         logs_path = f"{save_path}/head_model"
         )
     
-    for i in range(3):
+    for i in range(12):
         del X_test_emb,X_train_emb,head_model
         
         body_model = train_body_model(
@@ -82,12 +82,6 @@ def run_experiment():
             batch_size = 32,
             logs_path = f"{save_path}/head_model_{i+1}"
             )
-
-
-
-    import pdb; pdb.set_trace()
-
-
 
 
 if __name__ == "__main__":
