@@ -67,7 +67,7 @@ def run_experiment():
             CreateOptimizedDataset(X_train_original,most_confused_classes),X_test,
             epochs = 1,
             learning_rate = 0.00001,
-            batch_size = 32,
+            batch_size = 64,
             logs_path = f"{save_path}/body_model",
             optimizer = optimizer
             )
