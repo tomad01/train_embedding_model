@@ -41,11 +41,11 @@ def run_experiment():
     X_train_original = CustomDataset(X_train_original,config.data)
     X_test = CustomDataset(X_test,config.data)
 
-    # body_model = load_body_model("sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2")
-    # head_model = FullyConnectedNN(384, 256, len(X_train_original.df.label.unique()))
+    body_model = load_body_model("sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2")
+    head_model = FullyConnectedNN(384, 256, len(X_train_original.df.label.unique()))
 
-    body_model = load_body_model("intfloat/multilingual-e5-large-instruct")
-    head_model = FullyConnectedNN(1024, 512, len(X_train_original.df.label.unique()))
+    # body_model = load_body_model("intfloat/multilingual-e5-large-instruct")
+    # head_model = FullyConnectedNN(1024, 512, len(X_train_original.df.label.unique()))
 
 
     X_train_emb = create_embeddings(body_model,X_train_original)
@@ -80,6 +80,8 @@ def run_experiment():
         X_train_emb = create_embeddings(body_model,X_train_original)
         X_test_emb = create_embeddings(body_model,X_test)
         head_model = FullyConnectedNN(384, 256, len(X_train_original.df.label.unique()))
+        # head_model = FullyConnectedNN(1024, 512, len(X_train_original.df.label.unique()))
+
         most_confused_classes = train_head_model(
             head_model,
             X_train_emb,

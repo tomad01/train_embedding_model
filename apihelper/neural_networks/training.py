@@ -139,7 +139,7 @@ def train_body_model(body_model, X_train, X_test, epochs=1,
     # optimizer = optim.Adam(body_model.parameters(), lr=learning_rate)
     
     # Define Triplet Margin Loss
-    criterion = nn.TripletMarginLoss(margin=1.0, p=2) # try also a margin of 0.5
+    criterion = nn.TripletMarginLoss(margin=0.5, p=2) # try also a margin of 0.5, 1.0
     
     device = get_device()
     body_model.to(device)
