@@ -182,7 +182,7 @@ def train_body_model(body_model, X_train, X_test, epochs=1,
         loss_acum = []
         
         with torch.no_grad():
-            for anchor, positive, negative in test_loader:
+            for anchor, positive, negative in tqdm(test_loader,total=len(test_loader),desc="Evaluating Body Model"):
                 anchor, positive, negative = anchor.to(device), positive.to(device), negative.to(device)
                 anchor_embed = body_model(anchor)['sentence_embedding']
                 positive_embed = body_model(positive)['sentence_embedding']
